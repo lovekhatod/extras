@@ -1,0 +1,252 @@
+<html>
+<head>
+<title>Electricity Consumer Form</title>
+
+<style>
+h1
+{
+text-align: center;
+}
+calculate
+{
+text-align: center;
+}
+</style>
+
+<script>
+
+
+function cal()
+{
+        
+    var a=parseInt(document.getElementById("num").value);
+    var cost;
+var b= parseInt(document.getElementById("con").value);
+var b3= parseInt(document.getElementById("num").value);
+        
+if(a<=100)
+{
+cost=a*2.96;
+}
+else
+{
+cost=(100*2.96)+((a-100)*5.56);
+}
+alert("Consumer number: " + b);
+alert("Number of unit : " + b3);
+alert("Electricity charges: " + cost);
+}
+</script>
+</head>
+
+
+<body>
+<form >
+<table border="1" align="center">
+
+<tr>
+<td colspan="2" align="center"> <h4>Electricity Consumer Form<h4></td>
+</tr>
+
+<tr>
+  <td>Consumer No:</td>
+  <td><input type="number" id="con" name="consumer:" Pattern="[0-9]{10}" title="Enter 10-digit mobile number" required/></td>  
+   <td><span></span></td>  
+ </tr>
+
+<tr>
+  <td>Consumer Name:</td>
+  <td><input type="text" id="name" name="name" Pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{3,}" required/></td>  
+   <td><span></span></td>  
+ </tr>
+
+ <tr>
+  <td>Email</td>
+  <td><input type="email" id="email" name="email" required/></td>  
+   <td><span></span></td>  
+ </tr>
+
+ <tr>
+  <td>Number of Units</td>
+  <td><input type="number" id="num" Pattern="[0-9]{0,}"/></td>  
+  <td><span></span></td>  
+ </tr>
+
+<tr>
+   <td colspan="3" align="centre"><input type="button" value="Calculate Electricity Charges and Display" onclick="cal()" /></td>
+</tr>
+
+
+</table>
+</form>
+</body>
+</html>
+
+
+
+
+-----------------------------------------------------------
+
+
+Table
+
+create table electricity_consumer(consumerno number(8) primary key, consumername varchar2(20) not null, emailid varchar2(35),unitsconsumed number);
+
+create table electricity_bill (billno number primary key, consumerno number references electricty_consumer(consumerno),billamount number,billpaiddate date);
+
+insert into electricity_consumer values(1001,'Seema Joshi','Seema.joshi@gmail.com',250);
+
+insert into electricity_consumer values(1002,'Amey Joshi','amey.j@cg.com',345);
+
+insert into electricity_consumer values(1003,'Pravin','Pravin.t@cg.com',457);
+
+insert into electricity_consumer values(1004,'Manoj Kulkarni','manoj@gmail.com',780);
+
+insert into electricity_consumer values(1005,'Shrikant Shinde','Shrikant.shinde@gmail.com',90);
+
+insert into electricity_consumer values(1006,'Mahesh B','bMahesh@yahoo.com',720);
+
+insert into electricity_bill values(101,1001,440.45,'25-may-2017');
+
+insert into electricity_bill values(102,1002,690,'02-jun-2018');
+
+insert into electricity_bill values(103,1001,675,'05-aug-2017');
+
+insert into electricity_bill values(104,1004,678,'05-aug-2000');
+
+insert into electricity_bill values(105,1005,643,'08-jan-2001');
+
+insert into electricity_bill values(106,1004,900,'08-feb-2010');
+
+insert into electricity_bill values(107,1003,842,'12-may-2001');
+
+insert into electricity_bill values(108,1002,421,'18-sept-2009');
+
+insert into electricity_bill values(109,1005,346,'20-aug-2005');
+
+insert into electricity_bill values(110,1005,342,'26-july-2001');
+
+
+
+drop table electricity_consumer;
+
+drop table electricity_bill;
+
+drop sequence billid_seq;
+
+create sequence billid_seq start with 111 increment by 1;
+-------------------------------------------------------------
+
+Procedure
+
+
+create or replace procedure billcalc(p number) as
+vunits number;
+vtotal number;
+noconsumer exception;
+begin
+select unitsconsumed into vunits from electricity_consumer where consumerno=p;
+if(vunits<=100)
+{
+vtotal=02.96*vunits;
+update electricity_bill set billamount=vtotal where consumerno=p;
+}
+else
+{
+vtotal=02.96*vunits + (vunits-100)*05.56;
+update electricity_bill set billamount=vtotal where consumerno=p;
+}
+exception
+if noconsumer then
+DBMS_OUTPUT.PUT_LINE('consumer does not exist');
+    
+end billcalc;
+
+
+-----------------------------------------------------------
+
+Que
+
+1.select  consumerno, consumername from electricity_consumer where unitsconsumed= (select max(unitsconsumed) from electricity_consumer);
+
+2.select consumerno, count(*) from electricity_bill group by consumerno having count(*)>1;
+
+3.select * from electricity_consumer where consumerno In(select consumerno from electricity_bill where to_char(billpaiddate,'dd')>15);
+
+
+
+-------------------------------------
+
+
+Alter and add constraints---Billpaydate and Billpayduedate
+
+
+alter table electricity_Bill add(billpaymentdate date, billpaymentduedate date);
+alter table electricity_Bill add constrainrt billpaymentduedate check (billpaymentduedate between billpaymentdate and billpaymentdate+7);
+
+
+
+-------------------------------------------------------------------------
+
+XML and XSD
+
+
+XML
+
+<?xml version="1.0"?>
+<electricity>
+  <electricity_consumer consumerNo="1001">         <!--Consumer 1-->
+    <consumerName>Seema Joshi</consumerName>
+    <emailId>Seema.joshi@gmail.com</emailId>
+    <unitsConsumed>250</unitsConsumed>
+  </electricity_consumer>
+  <electricity_consumer consumerNo="1002">         <!--Consumer 1-->
+    <consumerName>Amey Joshi</consumerName>
+    <emailId>Amey.j@cg.com</emailId>
+    <unitsConsumed>345</unitsConsumed>
+  </electricity_consumer>
+  <electricity_consumer consumerNo="1003">         <!--Consumer 1-->
+    <consumerName>Pravin</consumerName>
+    <emailId>Pravin.t@cg.com</emailId>
+    <unitsConsumed>457</unitsConsumed>
+  </electricity_consumer>
+  <electricity_consumer consumerNo="1004">         <!--Consumer 1-->
+    <consumerName>Manoj Kulkarni</consumerName>
+    <emailId>manoj@gmail.com</emailId>
+    <unitsConsumed>780</unitsConsumed>
+  </electricity_consumer>
+  <electricity_consumer consumerNo="1005">         <!--Consumer 1-->
+    <consumerName>Shrikant Shinde</consumerName>
+    <emailId>Shrikant.shinde@gmail.com</emailId>
+    <unitsConsumed>90</unitsConsumed>
+  </electricity_consumer>
+  <electricity_consumer consumerNo="1006">         <!--Consumer 1-->
+    <consumerName>Mahesh B</consumerName>
+    <emailId>bMahesh@yahoo.com</emailId>
+    <unitsConsumed>720</unitsConsumed>
+  </electricity_consumer>
+</electricity>
+
+
+XSD
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+   <xs:schema  elementFormDefault="qualified" attributeFormDefault="unqualified">
+         <xs:element name="electricity">
+               <xs:complexType>
+                     <xs:sequence>
+                           <xs:element name="electricity_consumer" maxOccurs="unbounded">
+                                 <xs:complexType>
+                                       <xs:sequence>
+                                             <xs:element name="consumerName" type="xs:string"></xs:element>
+                                             <xs:element name="emailId" type="xs:string"></xs:element>
+                                             <xs:element name="unitsConsumed" type="xs:int"></xs:element>
+                                       </xs:sequence>
+                                       <xs:attribute name="consumerNo" type="xs:int"></xs:attribute>
+                                 </xs:complexType>
+                           </xs:element>
+                     </xs:sequence>
+               </xs:complexType>
+         </xs:element>
+   </xs:schema>
