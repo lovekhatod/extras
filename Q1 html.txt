@@ -1,0 +1,83 @@
+<html>
+<head>
+<title>Electricity Consumer Form</title>
+
+<style>
+h1
+{
+text-align: center;
+}
+calculate
+{
+text-align: center;
+}
+</style>
+
+<script>
+
+
+function cal()
+{
+        
+    var a=parseInt(document.getElementById("num").value);
+    var cost;
+var b= parseInt(document.getElementById("con").value);
+var b3= parseInt(document.getElementById("num").value);
+        
+if(a<=100)
+{
+cost=a*2.96;
+}
+else
+{
+cost=(100*2.96)+((a-100)*5.56);
+}
+alert("Consumer number: " + b);
+alert("Number of unit : " + b3);
+alert("Electricity charges: " + cost);
+}
+</script>
+</head>
+
+
+<body>
+<form >
+<table border="1" align="center">
+
+<tr>
+<td colspan="2" align="center"> <h4>Electricity Consumer Form<h4></td>
+</tr>
+
+<tr>
+  <td>Consumer No:</td>
+  <td><input type="number" id="con" name="consumer:" Pattern="[0-9]{10}" title="Enter 10-digit mobile number" required/></td>  
+   <td><span></span></td>  
+ </tr>
+
+<tr>
+  <td>Consumer Name:</td>
+  <td><input type="text" id="name" name="name" Pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{3,}" required/></td>  
+   <td><span></span></td>  
+ </tr>
+
+ <tr>
+  <td>Email</td>
+  <td><input type="email" id="email" name="email" required/></td>  
+   <td><span></span></td>  
+ </tr>
+
+ <tr>
+  <td>Number of Units</td>
+  <td><input type="number" id="num" Pattern="[0-9]{0,}"/></td>  
+  <td><span></span></td>  
+ </tr>
+
+<tr>
+   <td colspan="3" align="centre"><input type="button" value="Calculate Electricity Charges and Display" onclick="cal()" /></td>
+</tr>
+
+
+</table>
+</form>
+</body>
+</html>
